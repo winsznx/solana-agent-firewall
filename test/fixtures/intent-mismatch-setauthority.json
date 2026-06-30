@@ -1,0 +1,15 @@
+{
+  "name": "intent-mismatch-setauthority",
+  "kind": "offline",
+  "expectedVerdict": "WARN",
+  "mustContainFindings": [
+    "INTENT_MISMATCH",
+    "ACCOUNT_OWNER_CHANGE"
+  ],
+  "assertions": {
+    "intentMatches": false
+  },
+  "intent": "swap 1 SOL for USDC on Jupiter",
+  "source": "crafted locally",
+  "notes": "Claim-vs-reality fixture: stated swap intent, actual SetAuthority(AccountOwner)."
+}

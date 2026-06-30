@@ -1,0 +1,11 @@
+{
+  "name": "drain-approve-close",
+  "kind": "offline",
+  "expectedVerdict": "BLOCK",
+  "mustContainFindings": [
+    "UNLIMITED_APPROVE",
+    "ACCOUNT_CLOSE_DRAIN"
+  ],
+  "source": "crafted locally",
+  "notes": "Unlimited delegate plus close-to-non-signer. Deterministic, no network."
+}

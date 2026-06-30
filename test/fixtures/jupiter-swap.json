@@ -1,0 +1,20 @@
+{
+  "name": "jupiter-swap",
+  "kind": "onchain",
+  "acceptableVerdicts": [
+    "ALLOW",
+    "WARN"
+  ],
+  "requiresRpc": true,
+  "assertions": {
+    "minLookupTableCount": 1,
+    "noCriticalFindings": true,
+    "noUnknownProgramFindings": true,
+    "simulationRan": true
+  },
+  "signature": "5msgHHf5YS1LNvagQG3ysufLFGAmeLRZXfYS212CWLvPc2JUtK22LpmTH7hq7WqTCR6y74YCkX4qffog8rfKzPeD",
+  "slot": 429971852,
+  "explorer": "https://solscan.io/tx/5msgHHf5YS1LNvagQG3ysufLFGAmeLRZXfYS212CWLvPc2JUtK22LpmTH7hq7WqTCR6y74YCkX4qffog8rfKzPeD",
+  "source": "discovered via getSignaturesForAddress(Jupiter v6)",
+  "notes": "Historical swaps can WARN when current pool state makes re-simulation fail. Assert ALT resolution, known programs, and no false CRITICAL instead of forcing ALLOW."
+}

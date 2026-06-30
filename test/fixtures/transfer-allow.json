@@ -1,0 +1,13 @@
+{
+  "name": "transfer-allow",
+  "kind": "offline",
+  "expectedVerdict": "ALLOW",
+  "requiresRpc": true,
+  "assertions": {
+    "simulationRan": true,
+    "simulationSuccess": true,
+    "solDeltaNegative": true
+  },
+  "source": "built from FIXTURE_FROM_ADDRESS=GQ2gh9rQRXPg3UczKQDzUdjRAz9gfYAQfSpZQDbF88kQ",
+  "notes": "Built offline; the firewall simulates it live. Use a funded source so this is the clean ALLOW showcase."
+}
