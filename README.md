@@ -30,6 +30,14 @@ pnpm mcp
 
 When installed as a package or linked globally, the binaries are also available as `firewall` and `solana-agent-firewall-mcp`.
 
+## Agent Demo
+
+This is designed to be shown as an agent safety gate:
+
+> An autonomous Solana agent receives a transaction, calls `firewall_check`, then refuses `BLOCK`, escalates `WARN`, and only continues on `ALLOW`.
+
+See [demo/agent-demo.md](demo/agent-demo.md) for MCP config, Claude/Codex-style prompts, and a 2-3 minute recording flow.
+
 ## Demo Proof
 
 The repo ships manifest-backed fixtures that prove the safety gate on real transaction shapes:
