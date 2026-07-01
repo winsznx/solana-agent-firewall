@@ -38,6 +38,12 @@ This is designed to be shown as an agent safety gate:
 
 See [demo/agent-demo.md](demo/agent-demo.md) for MCP config, Claude/Codex-style prompts, and a 2-3 minute recording flow.
 
+Fast live agent demo:
+
+```bash
+SOLANA_RPC_URL="https://api.mainnet-beta.solana.com" pnpm demo:agent
+```
+
 ## Demo Proof
 
 The repo ships manifest-backed fixtures that prove the safety gate on real transaction shapes:

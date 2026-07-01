@@ -11,6 +11,14 @@ pnpm install
 pnpm build
 ```
 
+Fastest live demo:
+
+```bash
+SOLANA_RPC_URL="https://api.mainnet-beta.solana.com" pnpm demo:agent
+```
+
+This starts the MCP server, connects with an MCP client, calls `firewall_check` on three fixtures, and prints the agent's signing decision.
+
 Use this MCP server config in any MCP-capable agent client. Replace the path with your local checkout.
 
 ```json

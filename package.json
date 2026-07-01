@@ -30,6 +30,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
+    "demo:agent": "tsx scripts/mcp-agent-demo.ts",
     "fetch:fixtures": "tsx scripts/fetch-fixtures.ts",
     "firewall": "node dist/cli.js",
     "mcp": "node dist/mcp.js",
