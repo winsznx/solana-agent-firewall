@@ -1,107 +1,92 @@
-# Agent Demo
+# Demo Video Script
 
-Show the skill as an agent safety gate, not just a CLI script.
+Target length: 2-3 minutes.
 
-## Setup
+Title: `Solana Agent Firewall: is_this_safe(tx) for Solana AI agents`
 
-Build the repo first:
+## Before Recording
 
-```bash
-pnpm install
-pnpm build
-```
+Open the repo in your editor and keep one terminal ready.
 
-Fastest live demo:
+Use this terminal command for the live agent/MCP proof:
 
 ```bash
 SOLANA_RPC_URL="https://api.mainnet-beta.solana.com" pnpm demo:agent
 ```
 
-This starts the MCP server, connects with an MCP client, calls `firewall_check` on three fixtures, and prints the agent's signing decision.
+If public RPC is slow, use your faster RPC URL.
 
-Use this MCP server config in any MCP-capable agent client. Replace the path with your local checkout.
+## Screen Flow
 
-```json
-{
-  "mcpServers": {
-    "solana-agent-firewall": {
-      "command": "node",
-      "args": ["/absolute/path/to/solana-agent-firewall/dist/mcp.js"],
-      "env": {
-        "SOLANA_RPC_URL": "https://api.mainnet-beta.solana.com"
-      }
-    }
-  }
-}
+1. Start on `README.md`.
+2. Open `skill/SKILL.md`.
+3. Open `src/mcp.ts` or `scripts/mcp-agent-demo.ts`.
+4. Run the live demo command.
+5. End on the GitHub repo page or README.
+
+## Voice Script
+
+Hi, this is Solana Agent Firewall.
+
+The one-line idea is simple: `is_this_safe(tx)` for Solana AI agents. Before an agent signs a transaction, this skill checks the actual serialized transaction and returns `ALLOW`, `WARN`, or `BLOCK`.
+
+The reason this matters is that most security tooling looks at source code before deploy. But agents need protection at the signing boundary. A planner, plugin, UI, or external protocol can hand the agent a transaction that looks like a swap but actually changes authority, grants unlimited approval, or closes token accounts into an attacker wallet.
+
+This repo is built as an installable Solana AI Kit skill, not just a script. Here is the `skill/` folder, with `SKILL.md` as the entry point, and focused docs for detectors, policy, simulation, architecture, and Token-2022 risks. It also includes `agents/`, `commands/`, and `install.sh`, so it follows the shape the bounty asked for.
+
+The runtime has two surfaces over the same core. Humans and CI can use the CLI. Agents can use the MCP server through the `firewall_check` tool.
+
+Now I will show the agent path.
+
+This command starts the local MCP server, connects with an MCP client, and calls `firewall_check` the way an agent would before signing.
+
+Run:
+
+```bash
+SOLANA_RPC_URL="https://api.mainnet-beta.solana.com" pnpm demo:agent
 ```
 
-## Agent Prompt
+First, the agent checks a clean funded SOL transfer. The firewall returns `ALLOW`. Simulation succeeds, there are no unknown programs, and the signer delta is visible. This is the kind of transaction an agent can continue with, if local policy allows auto-signing.
 
-Use this prompt in Claude, Codex, or another MCP-capable agent after connecting the MCP server:
+Second, the agent checks a crafted drain transaction. The firewall returns `BLOCK`. It detects unlimited SPL token approval and a close-account pattern that redirects value. The agent should refuse to sign this.
+
+Third, the user intent says this is a swap, but the transaction actually changes token-account ownership. The firewall returns `WARN` with an intent mismatch, so the agent escalates instead of blindly signing.
+
+The important thing is that the verdict is based on the transaction itself: decoded instructions, Address Lookup Table resolution, simulation effects, signer deltas, Token-2022 risk signals, and policy rules.
+
+So this is not another generic "AI explains Solana" skill. It is a pre-sign safety layer that agents can actually call before moving funds.
+
+Final line:
+
+Solana Agent Firewall is an installable Solana AI Kit skill for runtime transaction safety: `ALLOW` safe transactions, escalate `WARN`, and block dangerous signing.
+
+## What To Show In Terminal
+
+Expected demo shape:
 
 ```text
-You are an autonomous Solana signing agent.
+Agent connected to MCP tools: firewall_check
 
-Before signing any transaction, call firewall_check.
+Scenario: clean funded transfer
+Decision: ALLOW
 
-Rules:
-- If firewall_check returns BLOCK, refuse to sign.
-- If firewall_check returns WARN, escalate to a human.
-- If firewall_check returns ALLOW, continue only if policy permits automatic signing.
+Scenario: unlimited approval + close-account drain
+Decision: BLOCK
 
-Read test/fixtures/drain-approve-close.b64 and decide whether you would sign it.
+Scenario: stated swap intent, actual authority change
+Decision: WARN
 ```
 
-Expected agent behavior:
+It is fine if the exact wording differs. The key proof is that the command is using the MCP path and the three decisions are visible.
 
-```text
-I will not sign this transaction.
+## Optional Backup Commands
 
-firewall_check returned BLOCK because the transaction approves an unlimited SPL token allowance and closes a token account with rent redirected to a non-signer. This is a drain pattern.
+If the MCP demo has RPC trouble, show the same core through CLI:
+
+```bash
+pnpm firewall check test/fixtures/transfer-allow.b64 --rpc-url "$SOLANA_RPC_URL"
+pnpm firewall check test/fixtures/drain-approve-close.b64
+pnpm firewall check test/fixtures/intent-mismatch-setauthority.b64 --intent "swap 1 SOL for USDC on Jupiter"
 ```
 
-## Safe Transaction Prompt
-
-```text
-You are an autonomous Solana signing agent.
-
-Before signing any transaction, call firewall_check.
-
-Read test/fixtures/transfer-allow.b64 and decide whether you would sign it.
-```
-
-Expected agent behavior:
-
-```text
-firewall_check returned ALLOW.
-
-The transaction is a clean SOL transfer, simulation succeeded, no unknown programs were detected, and signer SOL delta is visible. This can proceed if the agent's local policy permits automatic signing.
-```
-
-## Intent-Mismatch Prompt
-
-```text
-You are an autonomous Solana signing agent.
-
-The user says this transaction swaps 1 SOL for USDC on Jupiter.
-Before signing, call firewall_check with that stated intent.
-
-Read test/fixtures/intent-mismatch-setauthority.b64 and decide whether you would sign it.
-```
-
-Expected agent behavior:
-
-```text
-I will not auto-sign this transaction.
-
-firewall_check returned WARN because the stated intent claims a swap, but the transaction changes token-account ownership. This must be escalated to a human.
-```
-
-## Video Flow
-
-1. Show the repo README and the one-liner: `is_this_safe(tx)`.
-2. Show the MCP config.
-3. Ask the agent to inspect `transfer-allow.b64`; it calls `firewall_check` and reports `ALLOW`.
-4. Ask the agent to inspect `drain-approve-close.b64`; it calls `firewall_check` and refuses to sign.
-5. Ask the agent to inspect `intent-mismatch-setauthority.b64` with the stated swap intent; it escalates on `WARN`.
-6. Close with: agents should refuse `BLOCK`, escalate `WARN`, and only auto-sign `ALLOW`.
+Close by saying the CLI and MCP use the same shared engine, so the verdict contract is identical.
