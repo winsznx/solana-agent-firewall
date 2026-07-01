@@ -102,3 +102,14 @@
   - signer SOL delta `-0.00001 SOL`
   - unknown programs `[]`
 - Remaining real-fixture input for full P0: a verified `FIXTURE_T22_MINT` carrying PermanentDelegate, TransferHook, or another Token-2022 risk.
+
+## Phase 8 - Public Submission And Bounty PR
+
+- Confirmed the main repo is clean and pushed to `https://github.com/winsznx/solana-agent-firewall`.
+- Verified `.fixture-wallet.json` is ignored and not tracked, so the generated local fixture wallet secret was not published.
+- Cloned `https://github.com/solanabr/skill-bounty` to inspect the requested PR target.
+- Found the bounty repo has no special README/template beyond its MIT license, so added a lightweight submission file instead of duplicating the full project.
+- Forked the bounty repo under `winsznx/skill-bounty`.
+- Added `submissions/solana-agent-firewall.md` summarizing the repo, skill fit, runtime surfaces, proofs, checks, and fail-safe model.
+- Opened PR `https://github.com/solanabr/skill-bounty/pull/148` from `winsznx:add-solana-agent-firewall` into `solanabr/skill-bounty:main`.
+- The remaining manual step is the Superteam Earn form submission, because it requires the user's logged-in browser/session and bounty credit.
